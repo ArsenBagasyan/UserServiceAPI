@@ -1,6 +1,6 @@
 package endpoints;
 
 public class UserEndpoints {
-    public static final String USERS = "/users";
-    public static final String USERS_ID = "/users/%s";
+    public static final String SEARCH_USERS = "/users";
+    public static final String GET_USERS_BY_ID = "/users/%s";
 }

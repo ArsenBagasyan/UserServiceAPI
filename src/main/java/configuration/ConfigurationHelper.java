@@ -8,7 +8,7 @@ import java.util.Properties;
 public class ConfigurationHelper {
     private static final Properties PROPERTIES = new Properties();
 
-    static  {
+    static {
         loadFile();
     }
 

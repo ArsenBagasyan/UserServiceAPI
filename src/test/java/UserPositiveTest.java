@@ -12,8 +12,8 @@ import static org.hamcrest.Matchers.*;
 import static enums.ResponseStatus.SUCCESS;
 
 public class UserPositiveTest extends TestBase {
-    //TODO move user creation and tracking to TestBase
-    //TODO
+    //TODO move and refactor user creation/tracking to TestBase
+    //TODO add negative cases
 
     @Test
     public void createUserTest() {
@@ -24,22 +24,20 @@ public class UserPositiveTest extends TestBase {
         try {
             Response response = UserService.createUser(name, email);
             userId = response.then().extract().jsonPath().getString("id");
-
             response
                     .then()
                     .statusCode(SUCCESS.getStatusCode())
-                    .body("id", notNullValue())
-                    .body("name", equalTo(name))
-                    .body("email", equalTo(email));
+                    .body("id", notNullValue(),
+                            "name", equalTo(name),
+                            "email", equalTo(email));
 
             Response getUserResponse = UserService.getUserById(userId);
-
             getUserResponse
                     .then()
                     .statusCode(SUCCESS.getStatusCode())
-                    .body("id", equalTo(userId))
-                    .body("name", equalTo(name))
-                    .body("email", equalTo(email));
+                    .body("id", equalTo(userId),
+                            "name", equalTo(name),
+                            "email", equalTo(email));
 
         } finally {
             if (userId != null) {
@@ -72,7 +70,6 @@ public class UserPositiveTest extends TestBase {
                             "id", hasItems(createdUserIds.toArray(new String[0])))
                     .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/searchUserSchema.json"));
 
-
         } finally {
             createdUserIds.forEach(this::addUserId);
         }
@@ -82,20 +79,19 @@ public class UserPositiveTest extends TestBase {
     public void getUserByIdTest() {
         String expectedName = TestDataUtil.generateRandomName();
         String expectedEmail = TestDataUtil.generateRandomEmail();
-
         String userId = null;
+
         try {
             Response response = UserService.createUser(expectedName, expectedEmail);
             userId = response.then().extract().jsonPath().getString("id");
 
             Response getUserResponse = UserService.getUserById(userId);
-
             getUserResponse
                     .then()
                     .statusCode(SUCCESS.getStatusCode())
-                    .body("id", equalTo(userId))
-                    .body("name", equalTo(expectedName))
-                    .body("email", equalTo(expectedEmail));
+                    .body("id", equalTo(userId),
+                            "name", equalTo(expectedName),
+                            "email", equalTo(expectedEmail));
 
         } finally {
             if (userId != null) {
@@ -108,8 +104,8 @@ public class UserPositiveTest extends TestBase {
     public void updateUserTest() {
         String initialName = TestDataUtil.generateRandomName();
         String initialEmail = TestDataUtil.generateRandomEmail();
-
         String userId = null;
+
         try {
             Response createResponse = UserService.createUser(initialName, initialEmail);
             userId = createResponse.then().extract().jsonPath().getString("id");
@@ -118,19 +114,17 @@ public class UserPositiveTest extends TestBase {
             String updatedEmail = TestDataUtil.generateRandomEmail();
 
             Response updateResponse = UserService.updateUser(userId, updatedName, updatedEmail);
-
             updateResponse
                     .then()
                     .statusCode(SUCCESS.getStatusCode());
 
             Response getUserResponse = UserService.getUserById(userId);
-
             getUserResponse
                     .then()
                     .statusCode(SUCCESS.getStatusCode())
-                    .body("id", equalTo(userId))
-                    .body("name", equalTo(updatedName))
-                    .body("email", equalTo(updatedEmail));
+                    .body("id", equalTo(userId),
+                            "name", equalTo(updatedName),
+                            "email", equalTo(updatedEmail));
 
         } finally {
             if (userId != null) {

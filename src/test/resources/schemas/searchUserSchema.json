@@ -15,7 +15,11 @@
         "type": "string"
       }
     },
-    "required": ["name", "email", "id"],
+    "required": [
+      "name",
+      "email",
+      "id"
+    ],
     "additionalProperties": false
   }
 }
